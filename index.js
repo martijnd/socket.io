@@ -2,7 +2,7 @@ const app = require("express")();
 const http = require("http").Server(app);
 const io = require("socket.io")(http, {
   cors: {
-    origin: "https://ultimate-tic-tac-toe-xi.vercel.app/",
+    origin: "https://*.vercel.app/",
     methods: ["GET", "POST"],
   },
 });
