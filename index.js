@@ -31,7 +31,8 @@ io.on("connection", function (socket) {
     })?.[0];
 
     if (code && games[code]) {
-      io.to([games[code].X, games[code].O]).emit("disconnected");
+      io.to(games[code].X).emit("disconnected");
+      io.to(games[code].O).emit("disconnected");
     }
     delete games[code];
   });
