@@ -10,11 +10,13 @@ const io = require("socket.io")(http, {
 let games = {};
 
 io.on("connection", function (socket) {
-  console.log("A user with ID: " + socket.id + " connected");
-  socket.on("join", ({ code, name }) => {
+  console.log(`A user with ID: ${socket.id} connected`);
+  socket.on("join", ({ code }) => {
     if (games[code]) {
       socket.emit("accepted", "O");
       games = { ...games, [code]: { ...games[code], O: socket.id } };
+      console.log(`emitting player-accepted to ${games[code].X}`)
+      io.to(games[code].X).emit('player-accepted');
     } else {
       socket.emit("accepted", "X");
       games = { ...games, [code]: { X: socket.id } };
@@ -23,7 +25,7 @@ io.on("connection", function (socket) {
 
   // Disconnect
   socket.on("disconnect", () => {
-    console.log("A user with ID: " + socket.id + " disconnected");
+    console.log(`A user with ID: ${socket.id} disconnected`);
     const code = Object.entries(games).find(([key, value]) => {
       return value.X === socket.id || value.O === socket.id;
     })?.[0];
